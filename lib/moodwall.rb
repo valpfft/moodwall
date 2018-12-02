@@ -1,3 +1,4 @@
+require "moodwall/executable"
 require "moodwall/version"
 
 module Moodwall
