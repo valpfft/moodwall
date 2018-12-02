@@ -11,3 +11,4 @@
 /.ctags
 /tags
 /.byebug_history
+/database.pstore
