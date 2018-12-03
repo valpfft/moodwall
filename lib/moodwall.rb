@@ -1,5 +1,6 @@
 require "moodwall/executable"
 require "moodwall/version"
+require "moodwall/repository"
 require "moodwall/record"
 require "moodwall/mood"
 require "moodwall/wallpaper"

@@ -1,17 +1,13 @@
 require "spec_helper"
 
 describe Moodwall::Record do
-  after do
-    described_class.all.each(&:delete)
-  end
-
-  describe "::repository" do
+  describe ".repository" do
     it "should initiate default repository" do
       expect(described_class.repository).to be_kind_of(PStore)
     end
   end
 
-  describe "::all" do
+  describe ".all" do
     let!(:samples) { Array.new(2) { described_class.new.save } }
 
     subject { described_class.all }
@@ -22,10 +18,10 @@ describe Moodwall::Record do
     end
   end
 
-  describe "::find" do
+  describe ".find!" do
     let!(:record) { described_class.new }
 
-    subject { described_class.find record.id }
+    subject { described_class.find! record.id }
 
     it "should find record by id" do
       record.save
@@ -34,6 +30,16 @@ describe Moodwall::Record do
 
     it "should raise error when no record exists" do
       expect { subject }.to raise_error(Moodwall::RecordNotFoundError)
+    end
+  end
+
+  describe ".reset" do
+    let!(:record) { described_class.new }
+
+    subject { described_class.reset }
+
+    it "should flush all records" do
+      expect(described_class.all).to eq []
     end
   end
 

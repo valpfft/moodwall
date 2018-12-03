@@ -5,6 +5,14 @@ require "bundler/setup"
 require "moodwall"
 
 RSpec.configure do |config|
+  config.after(:suite) do
+    Moodwall::Repository.reset
+  end
+
+  config.after(:each) do
+    described_class.reset if described_class.respond_to? :reset
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

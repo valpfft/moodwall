@@ -14,6 +14,7 @@ describe Moodwall::Mood do
   describe "#current" do
     context "with current provided" do
       let!(:mood) { described_class.new name: name, current: true }
+
       it "returns the current state" do
         expect(mood.current).to eq true
       end

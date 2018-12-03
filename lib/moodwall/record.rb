@@ -1,5 +1,3 @@
-require "pstore"
-
 module Moodwall
   class RecordNotFoundError < StandardError; end
 
@@ -9,7 +7,7 @@ module Moodwall
 
     class << self
       def repository
-        @repository ||= PStore.new("database.pstore")
+        @repository ||= Repository.store
       end
 
       def all
@@ -18,7 +16,13 @@ module Moodwall
         end
       end
 
-      def find(id)
+      def reset
+        transaction do |store|
+          store.delete name
+        end
+      end
+
+      def find!(id)
         all.find { |r| r.id == id.to_i } ||
           raise(RecordNotFoundError, "Can't find the record with id: #{ id }")
       end
