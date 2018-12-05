@@ -4,6 +4,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/ad73e69778bb4b5dcbdb/maintainability)](https://codeclimate.com/github/vmikhaliuk/moodwall/maintainability)
 [![Coverage Status](https://coveralls.io/repos/github/vmikhaliuk/moodwall/badge.svg?branch=master)](https://coveralls.io/github/vmikhaliuk/moodwall?branch=master)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+[![Gem Version](https://badge.fury.io/rb/moodwall.svg)](https://badge.fury.io/rb/moodwall)
 
 ![Alt text](assets/meme.jpg?raw=true)
 
