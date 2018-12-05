@@ -27,4 +27,23 @@ describe Moodwall::Mood do
       end
     end
   end
+
+  describe ".current" do
+    let!(:current_mood) { create :mood, :current }
+
+    it "should return current mood" do
+      expect(described_class.current).to eq current_mood
+    end
+  end
+
+  describe ".find_by_name" do
+    let!(:name) { "Catch me if you can" }
+    let!(:mood) { create :mood, name: name }
+
+    subject { described_class.find_by_name(name) }
+
+    it "should find the mood by name" do
+      is_expected.to eq mood
+    end
+  end
 end

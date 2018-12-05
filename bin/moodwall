@@ -1,0 +1,109 @@
+#!/usr/bin/env ruby
+
+begin
+  require "bundler/setup"
+  require "moodwall"
+rescue LoadError
+  require "rubygems"
+  require "moodwall"
+end
+
+require "optparse"
+require 'ostruct'
+require 'pp'
+
+class Moodwall::Optparse
+  class ScriptOptions
+    attr_accessor :change, :add, :mood, :wallpaper,
+                  :path, :mood_name
+
+
+    def initialize
+      self.change    = true
+      self.add       = false
+      self.mood      = false
+      self.wallpaper = true
+    end
+
+    def define_options(parser)
+      parser.banner = "Usage: moodwall [options]\nDefaults: moodwall -c -w"
+      parser.separator ""
+      parser.separator "Specific options:"
+
+      # additional commands
+      change_option(parser)
+      add_option(parser)
+      wallpaper_option(parser)
+      mood_option(parser)
+
+      parser.separator ""
+      parser.separator "Common options:"
+
+      parser.on_tail("-h", "--help", "Show this message") do
+        puts parser
+        exit
+      end
+
+      parser.on_tail("-v", "--version", "Show version") do
+        puts Moodwall::VERSION
+        exit
+      end
+    end
+
+    def change_option(parser)
+      parser.on("-c", "--change", "Change [target]") do
+        self.change = true
+        self.add = false
+      end
+    end
+
+    def add_option(parser)
+      parser.on("-a", "--add", "Add [target]") do
+        self.add = true
+        self.change = false
+      end
+    end
+
+    def wallpaper_option(parser)
+      parser.on("-w", "--wallpaper [PATH]", "Specifies wallpaper path") do |path, mood_name|
+        self.wallpaper = true
+        self.path = path
+        self.mood_name = mood_name
+      end
+    end
+
+    def mood_option(parser)
+      parser.on("-m", "--mood NAME", "Specifies mood name") do |mood_name|
+        self.mood = true
+        self.mood_name = mood_name
+      end
+    end
+  end
+
+  def parse(args)
+    @options = ScriptOptions.new
+    @args = OptionParser.new do |parser|
+      @options.define_options(parser)
+      parser.parse!(args)
+    end
+    @options
+  end
+
+  attr_reader :parser, :options
+end
+
+options = Moodwall::Optparse.new.parse(ARGV)
+
+case
+when options.add && options.mood && !options.mood_name.nil? && options.path.nil?
+  Moodwall::Mood.new({name: options.mood_name}).save
+when options.change && options.mood && !options.mood_name.nil?
+  Moodwall::Mood.set_current(name: options.mood_name)
+when options.add && options.wallpaper && !options.path.nil? && !options.mood_name.nil?
+  mood = Moodwall::Mood.find_by_name(options.mood_name)
+  Moodwall::Wallpaper.new({path: options.path, mood_id: mood.id}).save
+when options.change && options.wallpaper
+  executable = Moodwall::Executable.new({ command: "feh", arguments: "--bg-fill" })
+  wallpaper = Moodwall::Wallpaper.sample
+  executable.execute(wallpaper.path)
+end

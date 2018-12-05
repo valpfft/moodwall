@@ -5,6 +5,8 @@ require "bundler/setup"
 require "moodwall"
 require "factory_bot"
 
+SPEC_ROOT = File.dirname(__FILE__)
+
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
