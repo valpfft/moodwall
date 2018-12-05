@@ -1,12 +1,12 @@
 FactoryBot.define do
   factory :mood, class: Moodwall::Mood do
-    name "Winter"
-    current false
+    name { "Winter" }
+    current { false }
 
     initialize_with { new(name: name, current: current) }
 
     trait :current do
-      current true
+      current { true }
     end
   end
 end
