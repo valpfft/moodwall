@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    moodwall (0.1.0)
+    moodwall (0.1.1)
 
 GEM
   remote: https://rubygems.org/
