@@ -13,7 +13,7 @@ module Moodwall
     end
 
     def self.find_by_name(name)
-      all.find { |m| m.name.downcase == name.downcase }
+      all.find { |m| m.name.casecmp(name).zero? }
     end
   end
 end

@@ -1,6 +1,6 @@
 module Moodwall
   class WallpaperNotFoundError < StandardError; end
-  class PathMissingError < StandardError; end
+  class MissingPathError < StandardError; end
   class MissingFileError < StandardError; end
 
   class Wallpaper < Record
@@ -9,14 +9,14 @@ module Moodwall
     attr_reader :mood_id, :path, :weight
 
     def initialize(options)
-      @path    = options.fetch(:path) { raise(PathMissingError) }
-      @mood_id = options.fetch(:mood_id, Mood.current)
+      @path    = options.fetch(:path) { raise(MissingPathError, "Wallpaper path is required") }
+      @mood_id = options.fetch(:mood_id) { Moodwall::Mood.current }
       @weight  = options.fetch(:weight, 0)
     end
 
     class << self
       def sample
-        record = all.shuffle.sort.first
+        record = all.shuffle.min
         raise(WallpaperNotFoundError, "Can't find wallpaper.") if record.nil?
         record.increment_weight!
         record
