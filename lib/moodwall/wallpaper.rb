@@ -1,6 +1,7 @@
 module Moodwall
   class WallpaperNotFoundError < StandardError; end
   class PathMissingError < StandardError; end
+  class MissingFileError < StandardError; end
 
   class Wallpaper < Record
     include Comparable
@@ -22,6 +23,11 @@ module Moodwall
       end
     end
 
+    def save
+      check_file
+      super
+    end
+
     def <=>(other)
       other_weight = other.weight
       if other_weight != weight
@@ -34,6 +40,12 @@ module Moodwall
     def increment_weight!
       @weight += 1
       save
+    end
+
+    private
+
+    def check_file
+      raise(MissingFileError, "Can't find the `#{ path }`") unless File.exist?(path)
     end
   end
 end
