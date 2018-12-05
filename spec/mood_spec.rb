@@ -1,10 +1,9 @@
 require "spec_helper"
 
 describe Moodwall::Mood do
-  let!(:name) { "Winter" }
-
   describe "#name" do
-    let!(:mood) { described_class.new name: name }
+    let!(:name) { "Nature" }
+    let!(:mood) { build :mood, name: name }
 
     it "returns the supplied name" do
       expect(mood.name).to eq name
@@ -13,7 +12,7 @@ describe Moodwall::Mood do
 
   describe "#current" do
     context "with current provided" do
-      let!(:mood) { described_class.new name: name, current: true }
+      let!(:mood) { build :mood, :current }
 
       it "returns the current state" do
         expect(mood.current).to eq true
@@ -21,7 +20,7 @@ describe Moodwall::Mood do
     end
 
     context "with defaults" do
-      let!(:mood) { described_class.new name: name }
+      let!(:mood) { build :mood }
 
       it "returns the current state" do
         expect(mood.current).to eq false

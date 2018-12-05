@@ -7,5 +7,9 @@ module Moodwall
       @name    = name
       @current = current
     end
+
+    def self.current
+      all.find { |m| m.current == true }
+    end
   end
 end

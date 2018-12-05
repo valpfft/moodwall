@@ -8,7 +8,7 @@ describe Moodwall::Record do
   end
 
   describe ".all" do
-    let!(:samples) { Array.new(2) { described_class.new.save } }
+    let!(:samples) { create_list :record, 2 }
 
     subject { described_class.all }
 
@@ -19,7 +19,7 @@ describe Moodwall::Record do
   end
 
   describe ".find!" do
-    let!(:record) { described_class.new }
+    let!(:record) { build :record }
 
     subject { described_class.find! record.id }
 
@@ -70,8 +70,8 @@ describe Moodwall::Record do
   end
 
   describe "#==" do
-    let!(:record)         { described_class.new.save }
-    let!(:another_record) { described_class.new.save }
+    let!(:record)         { create :record }
+    let!(:another_record) { create :record }
 
     describe "compare records by id" do
       context "with same record" do
@@ -85,16 +85,29 @@ describe Moodwall::Record do
   end
 
   describe "#delete" do
-    let!(:record)         { described_class.new.save }
-    let!(:another_record) { described_class.new.save }
+    let!(:record) { create :record }
 
     it "should return deleted object" do
       expect(record.delete).to eq record
     end
 
     it "should remove object from database" do
-      another_record.delete
-      expect(described_class.all).to eq [record]
+      record.delete
+      expect(described_class.all).not_to include record
+    end
+  end
+
+  describe "#new_record?" do
+    subject { record.new_record? }
+
+    context "with new record" do
+      let!(:record) { build :record }
+      it { is_expected.to eq true }
+    end
+
+    context "with persisted record" do
+      let!(:record) { create :record }
+      it { is_expected.to eq false }
     end
   end
 end

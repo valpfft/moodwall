@@ -1,13 +1,17 @@
+require "pstore"
+
 module Moodwall
   class RecordNotFoundError < StandardError; end
 
   class Record
+    include Comparable
+
     attr_writer :repository
     attr_reader :id
 
     class << self
       def repository
-        @repository ||= Repository.store
+        Thread.current[:repository] ||= PStore.new("database.store")
       end
 
       def all
@@ -32,7 +36,7 @@ module Moodwall
       end
 
       def transaction(read_only: false, &transaction_body)
-        Record.repository.transaction(read_only, &transaction_body)
+        repository.transaction(read_only, &transaction_body)
       end
     end
 
@@ -41,19 +45,36 @@ module Moodwall
     end
 
     def save
-      @id ||= self.class.next_id
-      transaction do |store|
-        store[self.class.name] ||= []
-        store[self.class.name].delete self
-        store[self.class.name] << self
+      if new_record?
+        @id = self.class.next_id
+
+        transaction do |store|
+          store[self.class.name] ||= []
+          store[self.class.name] << self
+        end
+      else
+        transaction do |store|
+          store[self.class.name].delete_if { |r| r.id == @id }
+          store[self.class.name] << self
+        end
       end
       self
     end
+    alias save! save
 
     def delete
       self.class.repository.transaction do |store|
         Array(store[self.class.name]).delete self
       end
+      self
+    end
+
+    def new_record?
+      @id.nil?
+    end
+
+    def reload
+      self.class.find! @id
     end
 
     private
