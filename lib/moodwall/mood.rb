@@ -8,12 +8,25 @@ module Moodwall
       @current = current
     end
 
-    def self.current
-      all.find { |m| m.current == true }
-    end
+    class << self
+      def current
+        all.find { |m| m.current == true }
+      end
 
-    def self.find_by_name(name)
-      all.find { |m| m.name.casecmp(name).zero? }
+      def set_current(name:)
+        previous = current
+        if !previous.nil?
+          previous.current = false
+          previous.save
+        end
+        new_one = find_by_name(name)
+        new_one.current = true
+        new_one.save
+      end
+
+      def find_by_name(name)
+        all.find { |m| m.name.casecmp(name).zero? }
+      end
     end
   end
 end

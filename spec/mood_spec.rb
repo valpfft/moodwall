@@ -36,6 +36,21 @@ describe Moodwall::Mood do
     end
   end
 
+  describe ".set_current" do
+    let!(:previous)    { create :mood, :current }
+    let!(:new_current) { create :mood, name: "New sheriff" }
+
+    before { described_class.set_current name: "New sheriff" }
+
+    it "should unmark previously selected mood" do
+      expect(previous.reload.current).to eq false
+    end
+
+    it "should mark newly selected mood as current" do
+      expect(new_current.reload.current).to eq true
+    end
+  end
+
   describe ".find_by_name" do
     let!(:name) { "Catch me if you can" }
     let!(:mood) { create :mood, name: name }

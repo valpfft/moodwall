@@ -16,10 +16,15 @@ module Moodwall
 
     class << self
       def sample
-        record = all.shuffle.min
+        record = within_current_mood.shuffle.sort.first
         raise(WallpaperNotFoundError, "Can't find wallpaper.") if record.nil?
         record.increment_weight!
         record
+      end
+
+      def within_current_mood
+        mood = Moodwall::Mood.current
+        mood.nil? ? all : all.select { |w| w.mood_id == mood.id }
       end
     end
 
