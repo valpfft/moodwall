@@ -11,5 +11,9 @@ module Moodwall
     def self.current
       all.find { |m| m.current == true }
     end
+
+    def self.find_by_name(name)
+      all.find { |m| m.name.downcase == name.downcase }
+    end
   end
 end
