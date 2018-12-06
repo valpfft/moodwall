@@ -14,13 +14,14 @@ require 'pp'
 
 class Moodwall::Optparse
   class ScriptOptions
-    attr_accessor :change, :add, :mood, :wallpaper,
+    attr_accessor :change, :add, :list,
+                  :mood, :wallpaper,
                   :path, :mood_name
-
 
     def initialize
       self.change    = true
       self.add       = false
+      self.list      = false
       self.mood      = false
       self.wallpaper = true
     end
@@ -33,6 +34,8 @@ class Moodwall::Optparse
       # additional commands
       change_option(parser)
       add_option(parser)
+      list_option(parser)
+
       wallpaper_option(parser)
       mood_option(parser)
 
@@ -64,6 +67,14 @@ class Moodwall::Optparse
       end
     end
 
+    def list_option(parser)
+      parser.on("-l", "--list", "List [targets]") do
+        self.list = true
+        self.add = false
+        self.change = false
+      end
+    end
+
     def wallpaper_option(parser)
       parser.on("-w", "--wallpaper [PATH]", "Specifies wallpaper path") do |path, mood_name|
         self.wallpaper = true
@@ -73,7 +84,7 @@ class Moodwall::Optparse
     end
 
     def mood_option(parser)
-      parser.on("-m", "--mood NAME", "Specifies mood name") do |mood_name|
+      parser.on("-m", "--mood [NAME]", "Specifies mood name") do |mood_name|
         self.mood = true
         self.mood_name = mood_name
       end
@@ -98,7 +109,7 @@ case
 when options.add && options.mood && !options.mood_name.nil? && options.path.nil?
   Moodwall::Mood.new({name: options.mood_name}).save
 when options.change && options.mood && !options.mood_name.nil?
-  Moodwall::Mood.set_current(name: options.mood_name)
+  Moodwall::Mood.change_current(name: options.mood_name)
 when options.add && options.wallpaper && !options.path.nil? && !options.mood_name.nil?
   mood = Moodwall::Mood.find_by_name(options.mood_name)
   Moodwall::Wallpaper.new({path: options.path, mood_id: mood.id}).save
@@ -106,4 +117,8 @@ when options.change && options.wallpaper
   executable = Moodwall::Executable.new({ command: "feh", arguments: "--bg-fill" })
   wallpaper = Moodwall::Wallpaper.sample
   executable.execute(wallpaper.path)
+when options.list && options.mood
+  puts Moodwall::Mood.list_names
+when options.list && options.wallpaper
+  puts Moodwall::Wallpaper.list
 end

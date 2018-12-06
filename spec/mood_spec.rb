@@ -36,11 +36,23 @@ describe Moodwall::Mood do
     end
   end
 
-  describe ".set_current" do
+  describe ".list_names" do
+    let!(:first)  { create :mood, name: "Chicken" }
+    let!(:second) { create :mood, name: "Egg" }
+
+    subject { described_class.list_names }
+
+    it "should list all names" do
+      is_expected.to include first.name
+      is_expected.to include second.name
+    end
+  end
+
+  describe ".choose_current" do
     let!(:previous)    { create :mood, :current }
     let!(:new_current) { create :mood, name: "New sheriff" }
 
-    before { described_class.set_current name: "New sheriff" }
+    before { described_class.choose_current name: "New sheriff" }
 
     it "should unmark previously selected mood" do
       expect(previous.reload.current).to eq false

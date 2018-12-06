@@ -26,6 +26,10 @@ module Moodwall
         mood = Moodwall::Mood.current
         mood.nil? ? all : all.select { |w| w.mood_id == mood.id }
       end
+
+      def list
+        all.map(&:path)
+      end
     end
 
     def save

@@ -33,6 +33,18 @@ describe Moodwall::Wallpaper do
     end
   end
 
+  describe "::list" do
+    let!(:first)  { create :wallpaper }
+    let!(:second) { create :wallpaper }
+
+    subject { described_class.list }
+
+    it "should list all pathes" do
+      is_expected.to include first.path
+      is_expected.to include second.path
+    end
+  end
+
   describe "#weight" do
     let!(:weight) { 1 }
     let!(:wallpaper) { build :wallpaper, weight: weight }

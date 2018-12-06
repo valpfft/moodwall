@@ -13,19 +13,33 @@ module Moodwall
         all.find { |m| m.current == true }
       end
 
-      def set_current(name:)
-        previous = current
-        if !previous.nil?
-          previous.current = false
-          previous.save
-        end
+      def choose_current(name:)
+        nullify_current
+        choose_new_current(name)
+      end
+
+      def find_by_name(name)
+        all.find { |m| m.name.casecmp(name).zero? }
+      end
+
+      def list_names
+        all.map(&:name)
+      end
+
+      private
+
+      def choose_new_current(name)
         new_one = find_by_name(name)
         new_one.current = true
         new_one.save
       end
 
-      def find_by_name(name)
-        all.find { |m| m.name.casecmp(name).zero? }
+      def nullify_current
+        previous = current
+        unless previous.nil?
+          previous.current = false
+          previous.save
+        end
       end
     end
   end

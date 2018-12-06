@@ -32,6 +32,14 @@ moodwall -c -w or simply moodwall, since its a default option.
 <!-- To change current mood use: -->
 
 moodwall -c -m Winter
+
+<!-- To list all moods -->
+
+moodwall -l -m
+
+<!-- To list all images -->
+
+moodwall -l -w
 ```
 
 
