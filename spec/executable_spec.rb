@@ -11,11 +11,23 @@ describe Moodwall::Executable do
     end
   end
 
+  describe ".execute" do
+    let!(:path) { ".executable" }
+
+    subject { described_class.execute(path) }
+
+    before do
+      allow_any_instance_of(described_class).to receive(:system).and_return("test_dir")
+    end
+
+    it { is_expected.to eq("test_dir") }
+  end
+
   describe "#execute" do
     let!(:path)       { "." }
-    let!(:executable) { build :executable }
+    let!(:executable) { build(:executable) }
 
-    subject { executable.execute path }
+    subject { executable.execute(path) }
 
     before do
       allow(executable).to receive(:system).and_return("test_dir")

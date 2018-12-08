@@ -114,9 +114,10 @@ when options.add && options.wallpaper && !options.path.nil? && !options.mood_nam
   mood = Moodwall::Mood.find_by_name(options.mood_name)
   Moodwall::Wallpaper.new({path: options.path, mood_id: mood.id}).save
 when options.change && options.wallpaper
-  executable = Moodwall::Executable.new({ command: "feh", arguments: "--bg-fill" })
+  # config = Moodwall::Config.new
+  # executable = Moodwall::Executable.new({ command: config.executable.command, arguments: config.executable.arguments })
   wallpaper = Moodwall::Wallpaper.sample
-  executable.execute(wallpaper.path)
+  Executable.execute(wallpaper.path)
 when options.list && options.mood
   puts Moodwall::Mood.list_names
 when options.list && options.wallpaper
