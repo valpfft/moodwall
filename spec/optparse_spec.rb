@@ -39,7 +39,7 @@ describe Moodwall::Optparse do
         subject { parser.parse(["-v"]) }
 
         it "should print version" do
-          expect { subject }.to output(Moodwall::VERSION).to_stdout
+          expect { subject }.to output("#{ Moodwall::VERSION }\n").to_stdout
         end
       end
     end
