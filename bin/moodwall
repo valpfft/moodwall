@@ -109,7 +109,7 @@ case
 when options.add && options.mood && !options.mood_name.nil? && options.path.nil?
   Moodwall::Mood.new({name: options.mood_name}).save
 when options.change && options.mood && !options.mood_name.nil?
-  Moodwall::Mood.change_current(name: options.mood_name)
+  Moodwall::Mood.choose_current(name: options.mood_name)
 when options.add && options.wallpaper && !options.path.nil? && !options.mood_name.nil?
   mood = Moodwall::Mood.find_by_name(options.mood_name)
   Moodwall::Wallpaper.new({path: options.path, mood_id: mood.id}).save
