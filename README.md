@@ -14,6 +14,17 @@ Install it yourself as:
 
 $ gem install moodwall
 
+## Configuration
+
+Create a `config.yml` file at `~/.config/moodwall/config.yml` and specify
+command to change wallpaper in your distro. Here is defaults:
+
+``` yaml
+executable:
+  command: feh
+  arguments: --bg-fill
+```
+
 ## Usage examples
 
 ``` shell
