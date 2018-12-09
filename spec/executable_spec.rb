@@ -18,6 +18,7 @@ describe Moodwall::Executable do
 
     before do
       allow_any_instance_of(described_class).to receive(:system).and_return("test_dir")
+      allow_any_instance_of(described_class).to receive(:installed?).and_return(true)
     end
 
     it { is_expected.to eq("test_dir") }
