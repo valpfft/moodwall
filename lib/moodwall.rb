@@ -1,3 +1,5 @@
+require "moodwall/config_file"
+require "moodwall/config"
 require "moodwall/executable"
 require "moodwall/version"
 require "moodwall/repository"

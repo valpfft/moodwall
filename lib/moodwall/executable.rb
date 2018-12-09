@@ -4,10 +4,15 @@ module Moodwall
   class Executable
     attr_reader :command, :arguments
 
-    def initialize(options = {})
-      @command   = options.fetch(:command, nil)
-      @arguments = options.fetch(:arguments, nil)
+    def initialize(options = {}, config = Config.new)
+      @config    = config.executable
+      @command   = options.fetch(:command, @config.command)
+      @arguments = options.fetch(:arguments, @config.arguments)
       error_if_missing
+    end
+
+    def self.execute(path)
+      new.execute(path)
     end
 
     def error_if_missing
