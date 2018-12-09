@@ -45,10 +45,12 @@ module Moodwall
 
         parser.on_tail("-h", "--help", "Show this message") do
           puts parser
+          exit
         end
 
         parser.on_tail("-v", "--version", "Show version") do
           puts Moodwall::VERSION
+          exit
         end
       end
 

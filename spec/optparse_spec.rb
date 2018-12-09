@@ -17,19 +17,18 @@ describe Moodwall::Optparse do
     end
 
     context "with -h (--help) flag" do
-      context "short version" do
-        subject { parser.parse(["-h"]) }
-
-        it "should print help to STDOUT" do
-          expect { subject }.to output(String).to_stdout
-        end
-      end
-
-      context "short version" do
+      context "long version" do
         subject { parser.parse(["--help"]) }
 
         it "should print help to STDOUT" do
-          expect { subject }.to output(String).to_stdout
+          begin
+            expect { subject }.to output(String).to_stdout
+          rescue SystemExit
+          end
+        end
+
+        it "should exit cleanly" do
+          expect { subject }.to raise_error(SystemExit)
         end
       end
     end
@@ -39,7 +38,14 @@ describe Moodwall::Optparse do
         subject { parser.parse(["-v"]) }
 
         it "should print version" do
-          expect { subject }.to output("#{ Moodwall::VERSION }\n").to_stdout
+          begin
+            expect { subject }.to output("#{ Moodwall::VERSION }\n").to_stdout
+          rescue SystemExit
+          end
+        end
+
+        it "should exit cleanly" do
+          expect { subject }.to raise_error(SystemExit)
         end
       end
     end
