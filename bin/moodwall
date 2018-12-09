@@ -19,8 +19,7 @@ when options.add && options.wallpaper && !options.path.nil? && !options.mood_nam
   mood = Moodwall::Mood.find_by_name(options.mood_name)
   Moodwall::Wallpaper.new({path: options.path, mood_id: mood.id}).save
 when options.change && options.wallpaper
-  wallpaper = Moodwall::Wallpaper.sample
-  Executable.execute(wallpaper.path)
+  Moodwall::Executable.execute(Moodwall::Wallpaper.sample.path)
 when options.list && options.mood
   puts Moodwall::Mood.list_names
 when options.list && options.wallpaper
